@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,8 +18,13 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(Router $router)
     {
-        //
+        parent::boot($router);
+
+        // Aquí puedes agregar middleware global o de rutas específicas
+        $router->middlewareGroup('admin', [
+            \App\Http\Middleware\CheckAdmin::class,
+        ]);
     }
 }

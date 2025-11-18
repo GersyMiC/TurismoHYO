@@ -35,7 +35,10 @@ class CheckoutController extends Controller
 
     public function index()
     {
-        $uid = $this->usuarioId();
+        if (!session()->has('uid')) {
+            return redirect()->route('auth.login')->with('ok', 'Inicia sesión para continuar al checkout.');
+        }   
+
 
         $carrito = $this->carritoActivo($uid)->load([
             'items.paquete.destino',
@@ -62,7 +65,12 @@ class CheckoutController extends Controller
             'metodo_pago'      => 'required|in:efectivo,tarjeta', // simulado
         ]);
 
-        $uid = $this->usuarioId();
+
+        if (!session()->has('uid')) {
+            return redirect()->route('auth.login')->with('ok', 'Inicia sesión para continuar al checkout.');
+        }
+
+
         $carrito = $this->carritoActivo($uid)->load(['items.paquete','items.personalizacion']);
 
         if ($carrito->items->isEmpty()) {

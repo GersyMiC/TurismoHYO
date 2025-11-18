@@ -25,7 +25,13 @@
   <header class="container-fluid">
     <div class="container d-flex align-items-center justify-content-between">
       <h1 class="h4 m-0">Turismo HYO</h1>
-      <div class="small">Contacta: +51 999 999 999</div>
+      <div class="small">Contacta: +51 964 652 852</div>
+      @php
+        $authUser = null;
+        if (session()->has('uid')) {
+            $authUser = \App\Models\Usuario::find(session('uid'));
+        }
+      @endphp
     </div>
   </header>
 
@@ -37,7 +43,29 @@
       <li class="nav-item"><a class="nav-link" href="#">Personalizar</a></li>
       <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
       <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
-      <li class="ms-auto nav-item"><a class="nav-link" href="#">Ingresar</a></li>
+      
+      <li class="ms-auto nav-item dropdown">
+        @if($authUser)
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ Str::limit($authUser->nombre_completo, 20) }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{{ route('carrito.index') }}">Mi carrito</a></li>
+            <li><a class="dropdown-item" href="{{ route('checkout.index') }}">Checkout</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form method="post" action="{{ route('auth.logout') }}">
+                @csrf
+                <button class="dropdown-item">Salir</button>
+              </form>
+            </li>
+          </ul>
+        @else
+          <a class="nav-link" href="{{ route('auth.login') }}">Ingresar</a>
+        @endif
+      </li>
+
+
     </ul>
   </nav>
 

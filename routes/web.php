@@ -5,6 +5,8 @@ use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\PersonalizarController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\AuthSimpleController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('home'); // resources/views/home.blade.php
@@ -26,4 +28,13 @@ Route::post('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carr
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/reserva/{codigo}', [CheckoutController::class, 'show'])->name('reserva.show');
+
+Route::get('/ingresar',  [AuthSimpleController::class, 'loginForm'])->name('auth.login');
+Route::post('/ingresar', [AuthSimpleController::class, 'login']);
+Route::get('/registrar', [AuthSimpleController::class, 'registerForm'])->name('auth.register');
+Route::post('/registrar',[AuthSimpleController::class, 'register']);
+Route::post('/salir',    [AuthSimpleController::class, 'logout'])->name('auth.logout');
+
+// Ruta protegida por el middleware 'admin'
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware('admin');
 
