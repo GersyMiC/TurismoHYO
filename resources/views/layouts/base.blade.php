@@ -40,6 +40,7 @@
     <ul class="nav">
       <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Inicio</a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('catalogo.index') }}">Catálogo</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ route('mis_reservas.index') }}">Mis reservas</a></li>
       <li class="nav-item"><a class="nav-link" href="#">Personalizar</a></li>
       <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
       <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
