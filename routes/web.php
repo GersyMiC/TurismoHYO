@@ -7,6 +7,8 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AuthSimpleController;
 use App\Http\Controllers\AdminController;
+use App\Http\Middleware\CheckAdmin;
+
 
 Route::get('/', function () {
     return view('home'); // resources/views/home.blade.php
@@ -35,6 +37,8 @@ Route::get('/registrar', [AuthSimpleController::class, 'registerForm'])->name('a
 Route::post('/registrar',[AuthSimpleController::class, 'register']);
 Route::post('/salir',    [AuthSimpleController::class, 'logout'])->name('auth.logout');
 
-// Ruta protegida por el middleware 'admin'
-Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware('admin');
+//Route::get('/admin/dashboard', [AdminController::class, 'index']);
+
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(CheckAdmin::class);
+
 
