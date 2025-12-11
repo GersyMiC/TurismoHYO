@@ -4,7 +4,7 @@
 
 @section('contenido')
     <h2 class="mb-3">
-        Detalle de la reserva {{ $reserva->codigo }}
+        Detalle de la reserva #{{ $reserva->codigo }}
         <span class="badge bg-secondary">{{ ucfirst($reserva->estado) }}</span>
     </h2>
 
@@ -24,15 +24,15 @@
                 <div class="card-body">
                     <p class="mb-1">
                         <strong>Fecha de inicio:</strong>
-                        {{ $reserva->fecha_inicio ? $reserva->fecha_inicio->format('d/m/Y') : '-' }}
+                        {{ \Carbon\Carbon::parse($reserva->fecha_inicio)->format('d/m/Y') }}
                     </p>
                     <p class="mb-1">
                         <strong>Fecha de fin:</strong>
-                        {{ $reserva->fecha_fin ? $reserva->fecha_fin->format('d/m/Y') : '-' }}
+                        {{ \Carbon\Carbon::parse($reserva->fecha_fin)->format('d/m/Y') }}
                     </p>
                     <p class="mb-0">
                         <strong>Cantidad de pasajeros:</strong>
-                        {{ is_array($reserva->pasajeros_json) ? count($reserva->pasajeros_json) : 0 }}
+                        {{ $reserva->pasajeros_json ? count(json_decode($reserva->pasajeros_json)) : 0 }}
                     </p>
                 </div>
             </div>
@@ -51,34 +51,12 @@
             <div class="card mb-3">
                 <div class="card-header">Pasajeros</div>
                 <div class="card-body">
-                    @if(is_array($reserva->pasajeros_json) && count($reserva->pasajeros_json))
-                        <ul class="list-group list-group-flush">
-                            @foreach($reserva->pasajeros_json as $idx => $pasajero)
-                                <li class="list-group-item">
-                                    <strong>Pasajero {{ $idx + 1 }}:</strong>
-                                    {{ $pasajero['nombre'] ?? 'Sin nombre' }}
-                                    @if(!empty($pasajero['documento']))
-                                        – {{ $pasajero['documento'] }}
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p class="mb-0">No se registraron datos de pasajeros.</p>
-                    @endif
-                </div>
-            </div>
-
-            <div class="card mb-3">
-                <div class="card-header">Otros datos</div>
-                <div class="card-body">
-                    <p class="mb-1">
-                        <strong>Items asociados:</strong> {{ $reserva->items->count() }}
-                    </p>
-                    <p class="mb-0">
-                        <strong>Pagos registrados:</strong> {{ $reserva->pagos->count() }}
-                    </p>
-                    {{-- Aquí luego podemos detallar items y pagos según los campos de ReservaItem y Pago --}}
+                    @foreach(json_decode($reserva->pasajeros_json) ?? [] as $index => $pasajero)
+                        <p class="mb-1">
+                            <strong>Pasajero {{ $index + 1 }}:</strong>
+                            {{ $pasajero->nombre }} (Documento: {{ $pasajero->documento }})
+                        </p>
+                    @endforeach
                 </div>
             </div>
         </div>

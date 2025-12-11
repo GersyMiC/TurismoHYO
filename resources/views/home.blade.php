@@ -144,8 +144,8 @@
   {{-- Aside opcional: contacto rápido --}}
   <div class="p-3 border rounded">
     <h6 class="mb-2">Contacto rápido</h6>
-    <p class="small mb-1">WhatsApp: +51 999 999 999</p>
-    <p class="small m-0">Correo: info@turismohyo.pe</p>
+    <p class="small mb-1">WhatsApp: +51 964 652 852</p>
+    <p class="small m-0">Correo: turismohyo@gmail.com</p>
   </div>
   <div class="p-3 border rounded mt-3">
     <h6 class="mb-2">Horario de atención</h6>

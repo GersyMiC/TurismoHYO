@@ -28,12 +28,12 @@
                         <tr>
                             <td>{{ $reserva->codigo }}</td>
                             <td>
-                                {{ $reserva->fecha_inicio ? $reserva->fecha_inicio->format('d/m/Y') : '-' }}
+                                {{ \Carbon\Carbon::parse($reserva->fecha_inicio)->format('d/m/Y') }}
                             </td>
                             <td>
-                                {{ $reserva->fecha_fin ? $reserva->fecha_fin->format('d/m/Y') : '-' }}
+                                {{ \Carbon\Carbon::parse($reserva->fecha_fin)->format('d/m/Y') }}
                             </td>
-                            <td>{{ $reserva->cantidad_pasajeros }}</td>
+                            <td>{{ $reserva->pasajeros_json ? count(json_decode($reserva->pasajeros_json)) : 0 }}</td> {{-- Pasajeros JSON --}}
                             <td>
                                 <span class="badge bg-secondary">
                                     {{ ucfirst($reserva->estado) }}
@@ -53,3 +53,4 @@
         </div>
     @endif
 @endsection
+

@@ -46,139 +46,79 @@
         </div>
     </div>
 
-    {{-- Fila: ingresos totales + tabla reservas por estado --}}
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Ingresos totales</h5>
-                    <p class="display-6 mb-0">S/. {{ number_format($ingresosTotales, 2) }}</p>
-                    <small class="text-muted">Suma de reservas con estado "confirmada" (ajustable).</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-8">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Reservas por estado</h5>
-
-                    @if($reservasPorEstado->isEmpty())
-                        <p class="text-muted mb-0">No hay reservas registradas.</p>
-                    @else
-                        <div class="table-responsive">
-                            <table class="table table-sm align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Estado</th>
-                                        <th>Cantidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($reservasPorEstado as $fila)
-                                        <tr>
-                                            <td>{{ ucfirst($fila->estado) }}</td>
-                                            <td>{{ $fila->cantidad }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Fila con gráficas --}}
+    {{-- Gráfico: Reservas por estado --}}
     <div class="row g-3 mb-4">
         <div class="col-md-6">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Gráfico: Reservas por estado</h5>
+                    <h5 class="card-title">Gráfico: Reservas por estado</h5>
                     <canvas id="chartReservasEstado" height="160"></canvas>
                 </div>
             </div>
         </div>
 
+        {{-- Gráfico: Reservas e ingresos por mes --}}
         <div class="col-md-6">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Gráfico: Reservas / Ingresos por mes</h5>
+                    <h5 class="card-title">Gráfico: Reservas / Ingresos por mes</h5>
                     <canvas id="chartReservasMes" height="160"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Top 5 clientes --}}
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="card-title mb-3">Top 5 clientes con más reservas</h5>
-
-            @if($topClientes->isEmpty())
-                <p class="text-muted mb-0">Aún no hay suficientes datos de reservas.</p>
-            @else
-                <div class="table-responsive">
-                    <table class="table table-sm align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Email</th>
-                                <th>Reservas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($topClientes as $fila)
-                                <tr>
-                                    <td>{{ optional($fila->usuario)->nombre_completo ?? 'Sin nombre' }}</td>
-                                    <td>{{ optional($fila->usuario)->email ?? '-' }}</td>
-                                    <td>{{ $fila->reservas }}</td>
-                                </tr>
+    {{-- Gráfico: Reservas e ingresos por año --}}
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Gráfico: Reservas e ingresos por año</h5>
+                    <form method="GET" action="{{ route('admin.dashboard') }}">
+                        <select name="anio" class="form-select" onchange="this.form.submit()">
+                            @foreach(range(2020, Carbon\Carbon::now()->year) as $year)
+                                <option value="{{ $year }}" {{ $year == request('anio', Carbon\Carbon::now()->year) ? 'selected' : '' }}>
+                                    {{ $year }}
+                                </option>
                             @endforeach
-                        </tbody>
-                    </table>
+                        </select>
+                    </form>
+                    <canvas id="chartReservasAnio" height="160"></canvas>
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 
     {{-- Top destinos --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h5 class="card-title mb-3">Top destinos / paquetes más reservados</h5>
-
-            @if($topDestinos->isEmpty())
-                <p class="text-muted mb-0">Aún no hay suficientes datos para mostrar destinos.</p>
-            @else
-                <div class="table-responsive">
-                    <table class="table table-sm align-middle mb-0">
-                        <thead>
+            <h5 class="card-title mb-3">Top destinos más reservados</h5>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Destino</th>
+                            <th>Paquete</th>
+                            <th>Reservas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($topDestinos as $fila)
+                            @php
+                                $paquete = $fila->paquete;
+                                $destino = optional($paquete)->destino;
+                            @endphp
                             <tr>
-                                <th>Destino</th>
-                                <th>Paquete</th>
-                                <th>Reservas</th>
+                                <td>{{ $destino->nombre ?? 'Destino no definido' }}</td>
+                                <td>{{ $paquete->nombre ?? 'Paquete sin nombre' }}</td>
+                                <td>{{ $fila->reservas }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($topDestinos as $fila)
-                                @php
-                                    $paquete = $fila->paquete;
-                                    $destino = optional($paquete)->destino;
-                                @endphp
-                                <tr>
-                                    <td>{{ $destino->nombre ?? 'Destino no definido' }}</td>
-                                    <td>{{ $paquete->nombre ?? 'Paquete sin nombre' }}</td>
-                                    <td>{{ $fila->reservas }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
 
     {{-- Chart.js --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -228,6 +168,49 @@
                     {
                         label: 'Ingresos (S/.)',
                         data: ingresosMesData,
+                        type: 'line',
+                        borderWidth: 2,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        position: 'left',
+                        title: { display: true, text: 'Reservas' }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        title: { display: true, text: 'Ingresos (S/.)' },
+                        grid: { drawOnChartArea: false }
+                    }
+                }
+            }
+        });
+
+        // ---------- Gráfico: Reservas e ingresos por año ----------
+        const reservasAnioLabels = @json($labelsAnio);
+        const reservasAnioData   = @json($dataReservasAnio);
+        const ingresosAnioData   = @json($dataIngresosAnio);
+
+        const ctxAnio = document.getElementById('chartReservasAnio').getContext('2d');
+        new Chart(ctxAnio, {
+            type: 'bar',
+            data: {
+                labels: reservasAnioLabels,
+                datasets: [
+                    {
+                        label: 'Reservas',
+                        data: reservasAnioData,
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Ingresos (S/.)',
+                        data: ingresosAnioData,
                         type: 'line',
                         borderWidth: 2,
                         yAxisID: 'y1'

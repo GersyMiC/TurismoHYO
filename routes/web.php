@@ -40,10 +40,19 @@ Route::post('/salir',    [AuthSimpleController::class, 'logout'])->name('auth.lo
 
 //Route::get('/admin/dashboard', [AdminController::class, 'index']);
 
-Route::get('/admin/dashboard', [AdminController::class, 'index'])->middleware(CheckAdmin::class);
+//Route::get('/   ', [AdminController::class, 'index'])->name('admin.dashboard')->middleware(CheckAdmin::class);
+
+Route::get('/admin/dashboard', [AdminController::class, 'index'])
+    ->name('admin.dashboard')  // Asegúrate de que esta línea esté presente
+    ->middleware(CheckAdmin::class);
+
 
 Route::get('/mis-reservas', [MisReservasController::class, 'index'])->name('mis_reservas.index');
 Route::get('/mis-reservas/{id}', [MisReservasController::class, 'show'])->name('mis_reservas.show');
+
+Route::get('/admin/reservas', [AdminController::class, 'reservas'])->name('admin.reservas');
+
+Route::put('/admin/reservas/{id}', [AdminController::class, 'updateReservaEstado'])->name('admin.reservas.update');
 
 
 
