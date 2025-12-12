@@ -33,7 +33,10 @@
                             <td>
                                 {{ \Carbon\Carbon::parse($reserva->fecha_fin)->format('d/m/Y') }}
                             </td>
-                            <td>{{ $reserva->pasajeros_json ? count(json_decode($reserva->pasajeros_json)) : 0 }}</td> {{-- Pasajeros JSON --}}
+                            <td>{{ count($reserva->pasajeros_json ?? []) }}</td> {{-- Pasajeros JSON --}}
+
+
+
                             <td>
                                 <span class="badge bg-secondary">
                                     {{ ucfirst($reserva->estado) }}

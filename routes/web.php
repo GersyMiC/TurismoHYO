@@ -9,6 +9,8 @@ use App\Http\Controllers\AuthSimpleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\CheckAdmin;
 use App\Http\Controllers\MisReservasController;
+use App\Http\Controllers\ContactoController;
+
 
 
 Route::get('/', function () {
@@ -53,6 +55,12 @@ Route::get('/mis-reservas/{id}', [MisReservasController::class, 'show'])->name('
 Route::get('/admin/reservas', [AdminController::class, 'reservas'])->name('admin.reservas');
 
 Route::put('/admin/reservas/{id}', [AdminController::class, 'updateReservaEstado'])->name('admin.reservas.update');
+
+// Ruta para la página de contacto
+Route::get('/contacto', [ContactoController::class, 'index'])->name('contacto');
+
+// Ruta para manejar el envío del formulario de contacto
+Route::post('/contacto/enviar', [ContactoController::class, 'enviar'])->name('contacto.enviar');
 
 
 

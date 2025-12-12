@@ -40,10 +40,17 @@
     <ul class="nav">
       <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Inicio</a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('catalogo.index') }}">Catálogo</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ route('mis_reservas.index') }}">Mis reservas</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ route('admin.reservas') }}">Gestión de reservas</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+      <!-- Mostrar "Mis reservas" solo si el usuario está autenticado -->
+      @if($authUser)
+          <li class="nav-item"><a class="nav-link" href="{{ route('mis_reservas.index') }}">Mis reservas</a></li>
+      @endif
+
+      <!-- Mostrar "Gestión de reservas" y "Dashboard" solo si el usuario es admin -->
+      @if($authUser)
+          <li class="nav-item"><a class="nav-link" href="{{ route('admin.reservas') }}">Gestión de reservas</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+      @endif
+      <li class="nav-item"><a class="nav-link" href="{{ route('contacto') }}">Contacto</a></li>
       
       <li class="ms-auto nav-item dropdown">
         @if($authUser)

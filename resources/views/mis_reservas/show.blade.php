@@ -32,7 +32,7 @@
                     </p>
                     <p class="mb-0">
                         <strong>Cantidad de pasajeros:</strong>
-                        {{ $reserva->pasajeros_json ? count(json_decode($reserva->pasajeros_json)) : 0 }}
+                        {{ count($reserva->pasajeros_json ?? []) }}
                     </p>
                 </div>
             </div>
@@ -48,17 +48,7 @@
                 </div>
             </div>
 
-            <div class="card mb-3">
-                <div class="card-header">Pasajeros</div>
-                <div class="card-body">
-                    @foreach(json_decode($reserva->pasajeros_json) ?? [] as $index => $pasajero)
-                        <p class="mb-1">
-                            <strong>Pasajero {{ $index + 1 }}:</strong>
-                            {{ $pasajero->nombre }} (Documento: {{ $pasajero->documento }})
-                        </p>
-                    @endforeach
-                </div>
-            </div>
+            
         </div>
     </div>
 

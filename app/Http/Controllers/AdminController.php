@@ -118,11 +118,21 @@ class AdminController extends Controller
         // Construir la consulta para las reservas
         $query = Reserva::query();
 
-        // Filtrar por cliente
+        // Filtrar por cliente (usuario)
         if ($cliente) {
             $query->whereHas('usuario', function ($q) use ($cliente) {
-                $q->where('nombre', 'like', '%' . $cliente . '%');
+                $q->where('nombre_completo', 'like', '%' . $cliente . '%'); // Cambiar 'nombre' por 'nombre_completo'
             });
+        }
+
+        // Filtrar por contacto_nombre también
+        if ($cliente) {
+            $query->orWhere('contacto_nombre', 'like', '%' . $cliente . '%');
+        }
+
+        // Filtrar por código de reserva
+        if ($cliente) {
+            $query->orWhere('codigo', 'like', '%' . $cliente . '%');
         }
 
         // Filtrar por fechas

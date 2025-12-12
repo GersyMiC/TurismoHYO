@@ -39,6 +39,9 @@ class CheckoutController extends Controller
             return redirect()->route('auth.login')->with('ok', 'Inicia sesión para continuar al checkout.');
         }   
 
+        // Obtener el 'uid' desde la sesión
+        $uid = session('uid');  // Aquí se obtiene el 'uid' de la sesión
+
 
         $carrito = $this->carritoActivo($uid)->load([
             'items.paquete.destino',
@@ -69,6 +72,9 @@ class CheckoutController extends Controller
         if (!session()->has('uid')) {
             return redirect()->route('auth.login')->with('ok', 'Inicia sesión para continuar al checkout.');
         }
+
+        // Obtener el 'uid' desde la sesión
+        $uid = session('uid');  // Aquí se obtiene el 'uid' de la sesión
 
 
         $carrito = $this->carritoActivo($uid)->load(['items.paquete','items.personalizacion']);
@@ -202,6 +208,18 @@ class CheckoutController extends Controller
             }
 
             // 5) Convertir carrito y limpiar items
+            $carrito = Carrito::find($carritoId); // O la forma en que obtienes el carrito
+
+            // Verificar si ya existe un carrito con el estado 'convertido' para el mismo usuario
+            $existingCarrito = Carrito::where('usuario_id', $carrito->usuario_id)
+                ->where('estado', 'convertido')
+                ->first();
+
+            if ($existingCarrito) {
+                // Si ya existe, puedes optar por retornar un error o simplemente no hacer nada
+                return redirect()->route('carrito.index')->with('error', 'Ya tienes un carrito con estado "convertido".');
+            }
+
             $carrito->estado = 'convertido';
             $carrito->actualizado_en = now();
             $carrito->save();

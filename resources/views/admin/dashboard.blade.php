@@ -76,7 +76,7 @@
                     <h5 class="card-title">Gráfico: Reservas e ingresos por año</h5>
                     <form method="GET" action="{{ route('admin.dashboard') }}">
                         <select name="anio" class="form-select" onchange="this.form.submit()">
-                            @foreach(range(2020, Carbon\Carbon::now()->year) as $year)
+                            @foreach(range(2023, Carbon\Carbon::now()->year) as $year)
                                 <option value="{{ $year }}" {{ $year == request('anio', Carbon\Carbon::now()->year) ? 'selected' : '' }}>
                                     {{ $year }}
                                 </option>
